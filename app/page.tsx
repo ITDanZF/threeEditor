@@ -1,65 +1,59 @@
+"use client";
 import Image from "next/image";
+import TypeIt from "typeit-react";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
+const AnimatedHeadline = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      <h2 className="text-white/95 text-4xl md:text-6xl font-extrabold tracking-tight">
+        <TypeIt
+          options={{
+            strings: [
+              '<span class="text-sky-400">这里是你最喜欢的</span> <span class="text-cyan-300">三维编辑器 ✨</span>',
+              '<span class="text-fuchsia-400">实时预览</span> · <span class="text-emerald-400">所见即所得</span>',
+              '<span class="text-amber-300">一键光照</span> · <span class="text-rose-400">智能材质</span>',
+              '<span class="text-cyan-300">升级你的 3D 创作体验</span> 🚀',
+            ],
+            loop: true,
+            speed: 70,
+            deleteSpeed: 40,
+            lifeLike: true,
+            startDelay: 300,
+            nextStringDelay: 800,
+            cursor: true,
+            cursorChar: "▋",
+            breakLines: false,
+            html: true,
+            waitUntilVisible: true,
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </h2>
+    </>
+  );
+};
+
+export default function HomePage() {
+  const router = useRouter();
+  return (
+    <div className="h-screen flex flex-col">
+      <header className="h-16 bg-[#0b1220] border-b border-white/5 flex flex-row items-center px-6 gap-3">
+        <Image src="/icon.svg" alt="三维编辑器" width={38} height={38} />
+        <h1 className="text-white font-bold">三维编辑器</h1>
+      </header>
+      <main className="relative flex-1 bg-linear-to-br from-[#0b1220] via-[#0e1a2f] to-[#091322]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_40%,rgba(56,189,248,0.10),transparent_60%)]"></div>
+        <div className="relative h-full w-full flex flex-col items-center justify-center gap-8 text-center">
+          <AnimatedHeadline />
+          <button
+            onClick={() => router.push("/editor")}
+            className="px-6 py-3 rounded-lg bg-linear-to-b from-sky-500 to-cyan-500 text-white font-medium ring-1 ring-sky-300/30 shadow-lg shadow-cyan-900/30 hover:from-sky-400 hover:to-cyan-400 active:from-sky-600 active:to-cyan-600 transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            一键开启你的编辑
+          </button>
         </div>
       </main>
+      <footer className="h-12 bg-[#0b1220] border-t border-white/5">132</footer>
     </div>
   );
 }

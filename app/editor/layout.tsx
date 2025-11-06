@@ -1,0 +1,21 @@
+"use client";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+export default function EditorLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="h-screen flex flex-row bg-[#0b1220]">
+      <PanelGroup direction="horizontal">
+        <Panel defaultSize={30} minSize={15}>
+          <aside>324</aside>
+        </Panel>
+        <PanelResizeHandle className="w-1.5 md:w-2 cursor-col-resize bg-white/10 hover:bg-cyan-400/50 active:bg-cyan-400/70 transition-colors" />
+        <Panel>
+          <main>{children}</main>
+        </Panel>
+      </PanelGroup>
+    </div>
+  );
+}
