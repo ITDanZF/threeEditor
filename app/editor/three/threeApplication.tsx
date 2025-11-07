@@ -1,7 +1,6 @@
 "use client";
 import { useThreeApp } from "./hooks/useThreeApp";
-import { WorldCoordinate } from "./core/WorldCoordinate";
-import { MouseEvent } from "./core/MouseEvent";
+import { Grid, MouseEvent, WorldCoordinate } from "./core";
 export const ThreeApplication = () => {
   const mountId = "three-mount";
   const { ready, getViewer } = useThreeApp(mountId);
@@ -12,6 +11,8 @@ export const ThreeApplication = () => {
     MouseEvent(Viewer);
     // 初始化世界坐标系
     WorldCoordinate(Viewer);
+    // 初始化网格
+    Grid(Viewer);
   }
 
   return (
