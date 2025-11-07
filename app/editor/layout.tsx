@@ -13,7 +13,7 @@ export default function EditorLayout({
         </Panel>
         <PanelResizeHandle className="w-1.5 md:w-2 cursor-col-resize bg-white/10 hover:bg-cyan-400/50 active:bg-cyan-400/70 transition-colors" />
         <Panel>
-          <main>{children}</main>
+          <main className="w-full h-full">{children}</main>
         </Panel>
       </PanelGroup>
     </div>

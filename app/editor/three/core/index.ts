@@ -37,6 +37,9 @@ export default class ThreeViewer {
     // 创建场景
     this.scene = new THREE.Scene();
 
+    // 旋转整个世界坐标系，使其符合期望的 X/Y/Z 轴方向
+    this.scene.rotation.x = -Math.PI / 2;
+    this.scene.rotation.z = -Math.PI / 2;
     // 创建相机
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 
@@ -50,6 +53,7 @@ export default class ThreeViewer {
    */
   public Render() {
     if (!this.renderer || !this.scene || !this.camera) return;
+    this.renderer.setClearColor(0x000000, 1);
     this.renderer.render(this.scene, this.camera);
   }
 
@@ -62,6 +66,18 @@ export default class ThreeViewer {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.Render();
+  }
+
+  public getScene() {
+    return this.scene;
+  }
+
+  public getCamera() {
+    return this.camera;
+  }
+
+  public getRenderer() {
+    return this.renderer;
   }
 
   /**

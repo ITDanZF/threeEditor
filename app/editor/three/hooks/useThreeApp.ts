@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ThreeViewer from "../three";
+import ThreeViewer from "../core";
 
 export const useThreeApp = (mountId: string) => {
   const viewerRef = useRef<ThreeViewer | null>(null);

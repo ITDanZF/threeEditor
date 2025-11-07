@@ -1,7 +1,7 @@
-import { ThreeApplication } from "./components/threeApplication";
+import { ThreeApplication } from "./three/threeApplication";
 export default function EditorPage() {
   return (
-    <div>
+    <div className="w-full h-full">
       <ThreeApplication />
     </div>
   );
