@@ -9,7 +9,7 @@ export default function EditorLayout({
   return (
     <div className="h-screen flex flex-row bg-[#0b1220]">
       <PanelGroup direction="horizontal">
-        <Panel defaultSize={30} minSize={15}>
+        <Panel defaultSize={20} minSize={20} maxSize={20}>
           <EditPanel />
         </Panel>
         <PanelResizeHandle className="w-1.5 md:w-2 cursor-col-resize bg-white/10 hover:bg-cyan-400/50 active:bg-cyan-400/70 transition-colors" />

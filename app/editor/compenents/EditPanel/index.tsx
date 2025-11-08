@@ -1,8 +1,15 @@
+import ModelList from "./ModelList";
+import ModelEdit from "./ModelEdit";
+
 export default function EditPanel() {
   return (
     <div className="w-full h-full flex flex-row">
-      <div className="w-30 bg-red-500">13245</div>
-      <div className="w-100 bg-blue-500">65465</div>
+      <div className="w-20 text-amber-50">
+        <ModelEdit />
+      </div>
+      <div className="flex-1">
+        <ModelList />
+      </div>
     </div>
   );
 }
