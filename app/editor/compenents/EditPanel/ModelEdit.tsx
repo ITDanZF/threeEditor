@@ -31,7 +31,14 @@ const IconList = [
 ];
 export default function ModelEdit() {
   const [iconList, setIconList] = useState<typeof IconList>(IconList);
-
+  const handleChoose = (icon: (typeof IconList)[number]) => {
+    setIconList((prevList) =>
+      prevList.map((item) => ({
+        ...item,
+        isActive: item.name === icon.name ? !item.isActive : false,
+      }))
+    );
+  };
   return (
     <div className="flex flex-col items-center">
       {iconList.map((icon) => {
@@ -51,14 +58,7 @@ export default function ModelEdit() {
               }
             )}
             title={icon.name}
-            onClick={() => {
-              setIconList((prevList) =>
-                prevList.map((item) => ({
-                  ...item,
-                  isActive: item.name === icon.name ? !item.isActive : false,
-                }))
-              );
-            }}
+            onClick={() => handleChoose(icon)}
           >
             <Image src={icon.path} alt={icon.name} width={24} height={24} />
             <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 whitespace-nowrap text-xs px-2 py-1 rounded bg-slate-900/90 text-amber-100 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition duration-200 z-10 shadow border border-slate-700">
