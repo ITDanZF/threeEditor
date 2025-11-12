@@ -10,34 +10,35 @@ export interface DBConfig {
 }
 
 // 通用的单例 IndexedDB 管理类
+// 修改为支持多个实例，每个数据库名称对应一个唯一实例
 class IndexDB extends Dexie {
-  private static instance: IndexDB;
-  private static config: DBConfig;
+  private static instances: Map<string, IndexDB> = new Map();
+  private config: DBConfig; // 改为实例变量
 
   private constructor(config: DBConfig) {
     super(config.name);
+    this.config = config; // 保存配置到实例
 
     // 定义数据库版本和表结构
     this.version(config.version).stores(config.stores);
   }
 
-  // 初始化并获取单例实例
-  public static getInstance(config?: DBConfig): IndexDB {
-    if (!IndexDB.instance) {
-      if (!config) {
-        throw new Error("首次调用 getInstance 必须提供数据库配置");
-      }
-      IndexDB.config = config;
-      IndexDB.instance = new IndexDB(config);
+  // 初始化并获取实例（根据配置名称确保唯一）
+  public static getInstance(config: DBConfig): IndexDB {
+    const name = config.name;
+    if (!IndexDB.instances.has(name)) {
+      const instance = new IndexDB(config);
+      IndexDB.instances.set(name, instance);
     }
-    return IndexDB.instance;
+    return IndexDB.instances.get(name)!;
   }
 
   // 获取表实例
   public getTable<T = unknown>(tableName: string): Table<T, number> | null {
     try {
       // 检查表是否在配置中定义
-      if (!IndexDB.config.stores[tableName]) {
+      if (!this.config.stores[tableName]) {
+        // 修改为使用实例 config
         return null;
       }
       const table = this.table(tableName) as Table<T, number>;
@@ -187,8 +188,8 @@ class IndexDB extends Dexie {
   // 删除数据库
   async deleteDatabase(): Promise<void> {
     await super.delete();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    IndexDB.instance = null as any;
+    // 从 Map 中移除该实例
+    IndexDB.instances.delete(this.name);
   }
 }
 

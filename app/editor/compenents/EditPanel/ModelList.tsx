@@ -1,32 +1,14 @@
 "use client";
-import { IndexDB, DBConfig } from "@/app/db";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Folder, File } from "./types";
-import FileListItem from "./FileListItem";
+import { Folder } from "./types";
+import FileList from "./File/FileList";
 
-// 配置数据库
-const dbConfig: DBConfig = {
-  name: "ModelListDB",
-  version: 1,
-  stores: {
-    // 文件夹表：存储文件夹层级结构
-    // 字段：id(自增), name(名称), parentId(父文件夹ID), path(路径), createdAt(创建时间)
-    folders: "++id, name, parentId, path, createdAt",
 
-    // 模型表：存储三维模型二进制数据
-    // 字段：id(自增), name(文件名), folderId(所属文件夹), data(二进制数据),
-    //      fileType(文件类型), fileSize(大小), thumbnail(缩略图), createdAt(创建时间)
-    models: "++id, name, folderId, fileType, createdAt, fileSize",
-  },
-};
-const db = IndexDB.getInstance(dbConfig);
 
 export default function ModelList() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [folders, setFolders] = useState<Folder[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
 
   const handleAddModel = () => {
     console.log("添加模型");
@@ -54,17 +36,7 @@ export default function ModelList() {
     };
   }, [isOpen]);
 
-  // 获取文件夹列表
-  useEffect(() => {
-    const fetchFolders = async () => {
-      const folders = await db.getAll("folders");
-      const files = await db.getAll("models");
-      console.log(folders, "folders");
-      setFolders(folders as Folder[]);
-      setFiles(files as File[]);
-    };
-    fetchFolders();
-  }, []); // 只在组件挂载时执行一次
+
 
   /**
    * 下拉菜单内容
@@ -86,15 +58,15 @@ export default function ModelList() {
   async function handleCreateFolder() {
     setIsOpen(false);
 
-    const folderData: Folder = {
-      name: "新建文件夹",
-      parentId: null, // 根目录，没有父文件夹
-      path: `/新建文件夹`, // 根路径
-      createdAt: new Date().toISOString(), // 创建时间
-    };
+    // const folderData: Folder = {
+    //   name: "新建文件夹",
+    //   parentId: null, // 根目录，没有父文件夹
+    //   path: `/新建文件夹`, // 根路径
+    //   createdAt: new Date().toISOString(), // 创建时间
+    // };
 
-    // 写入数据库
-    const newId = await db.add("folders", folderData);
+    // // 写入数据库
+    // const newId = await db.add("folders", folderData);
   }
 
   return (
@@ -114,7 +86,7 @@ export default function ModelList() {
         {isOpen && handleMenus}
       </div>
       {/* 文件夹列表 */}
-      <FileListItem folders={folders} files={files} />
+      <FileList/>
     </div>
   );
 }
