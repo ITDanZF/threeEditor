@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import clsx from "clsx";
-import { Folder } from "../types";
+import { Folder } from "../../types";
 import { useEditorStore } from "@/app/store/editorStore";
 
 type FileItemProps = {
@@ -10,17 +10,23 @@ type FileItemProps = {
   onUpdate: (folder: Folder) => void;
 };
 
-export default function FileItem({ key, folder, onUpdate }: FileItemProps) {
-  const [isOpen, setIsOpen] = useState(true);
+export default function FileItem({ folder, onUpdate }: FileItemProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [isShowMore, setIsShowMore] = useState(false);
   const setCurrentFolderId = useEditorStore(
     (state) => state.setCurrentFolderId
   );
   const currentFolderId = useEditorStore((state) => state.currentFolderId);
+  
   function handleClick(folder: Folder) {
     console.log(folder, "folder");
+    
     if (!folder.id) {
       return;
+    }
+
+    if (isOpen) {
+      onUpdate(folder)
     }
 
     setCurrentFolderId(`${folder.id}`);
@@ -44,6 +50,8 @@ export default function FileItem({ key, folder, onUpdate }: FileItemProps) {
     console.log("删除");
     setIsShowMore(false);
   }
+
+  const isOpenFlag = (currentFolderId === `${folder.id}` && isOpen);
 
   const moreMenu = (
     <div
@@ -72,20 +80,20 @@ export default function FileItem({ key, folder, onUpdate }: FileItemProps) {
           "flex h-8 justify-between items-center gap-2 p-2 cursor-pointer hover:bg-slate-700/50 rounded-md",
           {
             "bg-slate-700/50 border border-slate-600":
-              currentFolderId === `${folder.id}`,
-            "bg-transparent": !(currentFolderId === `${folder.id}`),
+            isOpenFlag,
+            "bg-transparent": !isOpenFlag,
           }
         )}
       >
         <div className="flex items-center gap-2">
           <Image
-            src={isOpen ? "/svg/rightArrow.svg" : "/svg/downArrow.svg"}
+            src={!isOpenFlag ? "/svg/rightArrow.svg" : "/svg/downArrow.svg"}
             width={12}
             height={12}
             alt="right"
           />
           <Image
-            src={isOpen ? "/svg/folder.svg" : "/svg/folderOpen.svg"}
+            src={!isOpenFlag ? "/svg/folder.svg" : "/svg/folderOpen.svg"}
             width={16}
             height={16}
             alt="folder"

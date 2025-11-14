@@ -1,7 +1,7 @@
 import FileItem from "./FileItem";
 import { useEffect, useState } from "react";
 import { ModelListIndexDB } from "@/app/db";
-import { Folder } from "../types";
+import { Folder } from "../../types";
 
 export default function FileList() {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -16,16 +16,19 @@ export default function FileList() {
       fetchFolders();
     }, []); // 只在组件挂载时执行一次
   
-    function handleUpdateFolder(folder: Folder) {
+    /**
+     *  查询子目录文件
+     * @param folder 
+     */
+    function handleGetList(folder: Folder) {
       // 使用db更新
       console.log(folder, "folder");
-      
     }
 
   return (
     <div className="w-full h-full">
       {folders.map((folder) => (
-        <FileItem key={folder.id?.toString() || ""} folder={folder} onUpdate={handleUpdateFolder} />
+        <FileItem key={folder.id?.toString() || ""} folder={folder} onUpdate={handleGetList} />
       ))}
     </div>
   );

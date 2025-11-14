@@ -22,19 +22,19 @@ import IndexDB, { DBConfig } from "./indexDB";
 export { IndexDB };
 export type { DBConfig };
 
-// 配置数据库
-const dbConfig: DBConfig = {
-  name: "ModelListDB",
-  version: 1,
-  stores: {
-    // 文件夹表：存储文件夹层级结构
-    // 字段：id(自增), name(名称), parentId(父文件夹ID), path(路径), createdAt(创建时间)
-    folders: "++id, name, parentId, path, createdAt",
+// // 配置数据库
+// const dbConfig: DBConfig = {
+//   name: "ModelListDB",
+//   version: 1,
+//   stores: {
+//     // 文件夹表：存储文件夹层级结构
+//     // 字段：id(自增), name(名称), parentId(父文件夹ID), path(路径), createdAt(创建时间)
+//     folders: "++id, name, parentId, path, createdAt",
 
-    // 模型表：存储三维模型二进制数据
-    // 字段：id(自增), name(文件名), folderId(所属文件夹), data(二进制数据),
-    //      fileType(文件类型), fileSize(大小), thumbnail(缩略图), createdAt(创建时间)
-    models: "++id, name, folderId, fileType, createdAt, fileSize",
-  },
-};
-export const ModelListIndexDB = IndexDB.getInstance(dbConfig);
+//     // 模型表：存储三维模型二进制数据
+//     // 字段：id(自增), name(文件名), folderId(所属文件夹), data(二进制数据),
+//     //      fileType(文件类型), fileSize(大小), thumbnail(缩略图), createdAt(创建时间)
+//     models: "++id, name, folderId, fileType, createdAt, fileSize",
+//   },
+// };
+// export const ModelListIndexDB = IndexDB.getInstance(dbConfig);

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Folder } from "./types";
-import FileList from "./File/FileList";
+import FileList from "./File/ui/FileList";
 
 
 
