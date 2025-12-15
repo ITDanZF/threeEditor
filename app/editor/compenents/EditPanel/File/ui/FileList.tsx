@@ -1,6 +1,6 @@
 import FileFolder from "./FileFolder";
 import FileItem from "./FileItem";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ModelListIndexDB } from "@/app/db";
 import { Folder, File } from "../../types";
 
@@ -175,41 +175,81 @@ const filesTest: File[] = [
   },
 ];
 
+type ChildrenPayload = { folders: Folder[]; files: File[] };
+
 export default function FileList() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-    // 获取文件夹列表
-    useEffect(() => {
-      const fetchFolders = async () => {
-        const folders = await ModelListIndexDB.getAll("folders");
-        const files = await ModelListIndexDB.getAll("models");
-        console.log(folders, "folders");
-        setFolders(folders as Folder[]);
-        setFiles(files as File[]);
-      };
-      fetchFolders();
-    }, []); // 只在组件挂载时执行一次
-  
-    /**
-     *  查询子目录文件
-     * @param folder 
-     */
-    function handleGetList(folder: Folder) {
-      // 使用db更新
-      console.log(folder, "folder");
-    }
 
-    function handleGetFileList(file: File) {
-      console.log(file, "file");
-    }
+  // 获取文件夹/文件列表
+  useEffect(() => {
+    const fetchFolders = async () => {
+      const folders = await ModelListIndexDB.getAll("folders");
+      const files = await ModelListIndexDB.getAll("models");
+      setFolders(folders as Folder[]);
+      setFiles(files as File[]);
+    };
+    fetchFolders();
+  }, []); // 只在组件挂载时执行一次
+
+  // 当 IndexedDB 还没返回或为空时，使用模拟数据兜底
+  const effectiveFolders = folders.length ? folders : folderTest;
+  const effectiveFiles = files.length ? files : filesTest;
+
+  // 按 parentId / folderId 建索引，便于快速取子集
+  const folderMap = useMemo(() => {
+    const map = new Map<number | null, Folder[]>();
+    effectiveFolders.forEach((f) => {
+      const pid = f.parentId ?? null;
+      const list = map.get(pid) ?? [];
+      list.push(f);
+      map.set(pid, list);
+    });
+    return map;
+  }, [effectiveFolders]);
+
+  const fileMap = useMemo(() => {
+    const map = new Map<number | null, File[]>();
+    effectiveFiles.forEach((f) => {
+      const fid = f.folderId ?? null;
+      const list = map.get(fid) ?? [];
+      list.push(f);
+      map.set(fid, list);
+    });
+    return map;
+  }, [effectiveFiles]);
+
+  const getChildren = (folderId: number | null): ChildrenPayload => {
+    return {
+      folders: folderMap.get(folderId ?? null) ?? [],
+      files: fileMap.get(folderId ?? null) ?? [],
+    };
+  };
+
+  function handleSelectFolder(folder: Folder) {
+    console.log("select folder:", folder);
+  }
+
+  function handleSelectFile(file: File) {
+    console.log("select file:", file);
+  }
+
+  const rootChildren = getChildren(null);
 
   return (
     <div className="w-full h-full">
-      {folderTest.map((folder) => (
-        <FileFolder key={folder.id?.toString()} folder={folder} onUpdate={handleGetList} />
+      {rootChildren.folders.map((folder) => (
+        <FileFolder
+          key={folder.id?.toString()}
+          folder={folder}
+          loadChildren={getChildren}
+          onSelectFolder={handleSelectFolder}
+          onSelectFile={handleSelectFile}
+          depth={0}
+        />
       ))}
-      {filesTest.map((file) => (
-        <FileItem key={file.id?.toString()} file={file} onUpdate={handleGetFileList} />
+      {rootChildren.files.map((file) => (
+        <FileItem key={file.id?.toString()} file={file} onUpdate={handleSelectFile} />
       ))}
     </div>
   );

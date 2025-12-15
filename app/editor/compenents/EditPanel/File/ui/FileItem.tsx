@@ -67,8 +67,8 @@ export default function FileItem({ file, onUpdate, activeId }: FileItemProps) {
         </div>
       </div>
       <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="text-[10px] text-slate-300 px-1.5 py-0.5 rounded bg-slate-800/70 border border-slate-700">
-          打开
+        <div className="text-[12px] text-slate-300 px-1.5 py-0.5 rounded bg-slate-800/70 border border-slate-700 leading-none">
+          ...
         </div>
       </div>
     </div>
