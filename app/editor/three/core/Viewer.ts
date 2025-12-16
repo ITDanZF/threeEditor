@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import type { EntityManagerInstance } from "./EntityManager";
+import type { RenderLoopInstance } from "./RenderLoop";
 /**
  * ThreeViewer 是三维编辑器的核心类，负责管理三维场景的创建、更新和渲染。
  */
@@ -8,11 +10,13 @@ export default class ThreeViewer {
   private renderer: THREE.WebGLRenderer | null = null;
   private camera: THREE.PerspectiveCamera | null = null;
   private scene: THREE.Scene | null = null;
-  private rafId: number | null = null;
-  private animateCallback: () => void = () => {};
+  private entityManager: EntityManagerInstance | null = null;
+  private renderLoop: RenderLoopInstance | null = null;
 
   constructor(el: HTMLElement) {
     this.el = el;
+    this.entityManager = null;
+    this.renderLoop = null;
   }
 
   /**
@@ -89,8 +93,6 @@ export default class ThreeViewer {
     this.renderer = null;
     this.scene = null;
     this.camera = null;
-    this.rafId = null;
-    this.animateCallback = () => {};
   }
 
   /**
@@ -100,11 +102,29 @@ export default class ThreeViewer {
     if (!this.renderer || !this.scene || !this.camera) return;
     this.renderer.clear();
     this.scene.clear();
-    this.camera.clear();
+    this.camera = null;
     this.renderer = null;
     this.scene = null;
     this.camera = null;
-    this.rafId = null;
-    this.animateCallback = () => {};
+  }
+
+  /**
+   * 挂载实体管理器
+   */
+  mountEntityManager(entityManager: EntityManagerInstance) {
+    if (!this.entityManager) {
+      this.entityManager = entityManager;
+    }
+    return this.entityManager;
+  }
+
+  /**
+   * 挂载渲染循环
+   */
+  mountRenderLoop(renderLoop: RenderLoopInstance) {
+    if (!this.renderLoop) {
+      this.renderLoop = renderLoop;
+    }
+    return this.renderLoop;
   }
 }
